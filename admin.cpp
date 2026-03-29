@@ -10,6 +10,7 @@ class Admin {
     public:
         sf::RenderWindow window;
         Clock delta;
+        sf::Event event;
 
     private:
         void Update() {}
@@ -31,26 +32,20 @@ class Admin {
         }
 
         void Run() {
-            sf::Event event;
-
             while (window.isOpen()) {
                 delta.cycleStart();
-
-                // Handle Events.
-                while (window.pollEvent(event)) {
-                    if (event.type == sf::Event::Closed) {
-                        Exit();
-                    }
-                }
-
+                Exit();
                 Update();
                 Draw();
             }
         }
 
         void Exit() {
-            window.close();
-            std::cout << "Window Closed." << std::endl;
+            // Handle Event (Closing)
+            while (window.pollEvent(event)) {
+                if (event.type == sf::Event::Closed) 
+                {window.close(); std::cout << "Window Closed." << std::endl;}
+            }
         }
 
         void Save() {}
