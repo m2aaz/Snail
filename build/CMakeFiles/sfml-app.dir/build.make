@@ -72,28 +72,28 @@ include CMakeFiles/sfml-app.dir/flags.make
 CMakeFiles/sfml-app.dir/codegen:
 .PHONY : CMakeFiles/sfml-app.dir/codegen
 
-CMakeFiles/sfml-app.dir/admin.cpp.o: CMakeFiles/sfml-app.dir/flags.make
-CMakeFiles/sfml-app.dir/admin.cpp.o: /Users/maazmasood/Snail/admin.cpp
-CMakeFiles/sfml-app.dir/admin.cpp.o: CMakeFiles/sfml-app.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/maazmasood/Snail/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/sfml-app.dir/admin.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sfml-app.dir/admin.cpp.o -MF CMakeFiles/sfml-app.dir/admin.cpp.o.d -o CMakeFiles/sfml-app.dir/admin.cpp.o -c /Users/maazmasood/Snail/admin.cpp
+CMakeFiles/sfml-app.dir/map.cpp.o: CMakeFiles/sfml-app.dir/flags.make
+CMakeFiles/sfml-app.dir/map.cpp.o: /Users/maazmasood/Snail/map.cpp
+CMakeFiles/sfml-app.dir/map.cpp.o: CMakeFiles/sfml-app.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/maazmasood/Snail/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/sfml-app.dir/map.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sfml-app.dir/map.cpp.o -MF CMakeFiles/sfml-app.dir/map.cpp.o.d -o CMakeFiles/sfml-app.dir/map.cpp.o -c /Users/maazmasood/Snail/map.cpp
 
-CMakeFiles/sfml-app.dir/admin.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/sfml-app.dir/admin.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/maazmasood/Snail/admin.cpp > CMakeFiles/sfml-app.dir/admin.cpp.i
+CMakeFiles/sfml-app.dir/map.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/sfml-app.dir/map.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/maazmasood/Snail/map.cpp > CMakeFiles/sfml-app.dir/map.cpp.i
 
-CMakeFiles/sfml-app.dir/admin.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/sfml-app.dir/admin.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/maazmasood/Snail/admin.cpp -o CMakeFiles/sfml-app.dir/admin.cpp.s
+CMakeFiles/sfml-app.dir/map.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/sfml-app.dir/map.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/maazmasood/Snail/map.cpp -o CMakeFiles/sfml-app.dir/map.cpp.s
 
 # Object files for target sfml-app
 sfml__app_OBJECTS = \
-"CMakeFiles/sfml-app.dir/admin.cpp.o"
+"CMakeFiles/sfml-app.dir/map.cpp.o"
 
 # External object files for target sfml-app
 sfml__app_EXTERNAL_OBJECTS =
 
-sfml-app: CMakeFiles/sfml-app.dir/admin.cpp.o
+sfml-app: CMakeFiles/sfml-app.dir/map.cpp.o
 sfml-app: CMakeFiles/sfml-app.dir/build.make
 sfml-app: /opt/homebrew/Cellar/sfml@2/2.6.2_1/lib/libsfml-graphics.2.6.2.dylib
 sfml-app: /opt/homebrew/Cellar/sfml@2/2.6.2_1/lib/libsfml-window.2.6.2.dylib

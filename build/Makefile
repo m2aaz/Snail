@@ -129,29 +129,29 @@ sfml-app/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/sfml-app.dir/build.make CMakeFiles/sfml-app.dir/build
 .PHONY : sfml-app/fast
 
-admin.o: admin.cpp.o
-.PHONY : admin.o
+map.o: map.cpp.o
+.PHONY : map.o
 
 # target to build an object file
-admin.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/sfml-app.dir/build.make CMakeFiles/sfml-app.dir/admin.cpp.o
-.PHONY : admin.cpp.o
+map.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sfml-app.dir/build.make CMakeFiles/sfml-app.dir/map.cpp.o
+.PHONY : map.cpp.o
 
-admin.i: admin.cpp.i
-.PHONY : admin.i
+map.i: map.cpp.i
+.PHONY : map.i
 
 # target to preprocess a source file
-admin.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/sfml-app.dir/build.make CMakeFiles/sfml-app.dir/admin.cpp.i
-.PHONY : admin.cpp.i
+map.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sfml-app.dir/build.make CMakeFiles/sfml-app.dir/map.cpp.i
+.PHONY : map.cpp.i
 
-admin.s: admin.cpp.s
-.PHONY : admin.s
+map.s: map.cpp.s
+.PHONY : map.s
 
 # target to generate assembly for a file
-admin.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/sfml-app.dir/build.make CMakeFiles/sfml-app.dir/admin.cpp.s
-.PHONY : admin.cpp.s
+map.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sfml-app.dir/build.make CMakeFiles/sfml-app.dir/map.cpp.s
+.PHONY : map.cpp.s
 
 # Help Target
 help:
@@ -162,9 +162,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... sfml-app"
-	@echo "... admin.o"
-	@echo "... admin.i"
-	@echo "... admin.s"
+	@echo "... map.o"
+	@echo "... map.i"
+	@echo "... map.s"
 .PHONY : help
 
 
