@@ -11,7 +11,6 @@ The system supports:
 - Layered rendering (ground + objects)
 - Empty tile handling
 
----
 
 ## Tilesheet Structure
 
@@ -22,7 +21,7 @@ Each tile in the tilesheet is accessed using grid-based coordinates, which are c
 - `tileSpacing` (size of each tile in pixels)
 - `tileLookup` (mapping of tile IDs to tilesheet positions)
 
-Example: ```cpp tileLookup[2] = {11, 11}; // Bush tile in tilesheet grid ```
+Example: ```tileLookup[2] = {11, 11}; // Bush tile in tilesheet grid ```
 
 This is later converted into pixel coordinates for rendering:
 ```cpp
@@ -30,7 +29,6 @@ pixelX = tilePos.x * tileSpacing;
 pixelY = tilePos.y * tileSpacing;
 ```
 
----
 
 ## Map Structure
 
@@ -52,13 +50,13 @@ vectorMapGround[y][x]
 vectorMapObject[y][x]
 ```
 
----
 
 ## Procedural Generation
 
 Object placement is generated using a random number generator:
 
 ```cpp
+// Generator: std::mt19937 rng;
 if (tileNum < 75) return 0; // Empty
 if (tileNum < 85) return 2; // Bush
 if (tileNum < 95) return 3; // Fern
@@ -69,7 +67,6 @@ This ensures:
 - Majority of tiles remain empty
 - Natural distribution of objects across the map
 
----
 
 ## Tile Lookup System
 
@@ -86,7 +83,6 @@ This allows separation between:
 - Logical tile IDs
 - Physical tilesheet positions
 
----
 
 ## Rendering Pipeline
 
@@ -116,7 +112,6 @@ TileToMap(tilePos, i, j);
 window.draw(currentTile);
 ```
 
----
 
 ## Coordinate System
 
@@ -133,7 +128,6 @@ y = i * tileSpacing
 
 This ensures correct spatial alignment of tiles on screen.
 
---- 
 
 ## Tile Rendering Function
 
@@ -160,7 +154,6 @@ This function:
 - Extracts the correct tile from the tilesheet
 - Positions it correctly in world space
 
----
 
 ## Errors To Look Out FOR:
 - Confused tile IDs with actual tilesheet coordinates; fixed by introducing a proper lookup table (tileLookup) separating logic from rendering positions.
