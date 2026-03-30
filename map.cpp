@@ -24,7 +24,8 @@ class Map {
 
         // Mapping & Lookup
         std::uniform_int_distribution<int> dist;
-        std::vector<std::vector<int>> vectorMap;
+        std::vector<std::vector<int>> vectorMapGround;
+        std::vector<std::vector<int>> vectorMapObject;
         std::unordered_map<int, sf::Vector2i> tileLookup;
 
         // Tile Information
@@ -36,7 +37,7 @@ class Map {
         // Random Number Generator (apparently widely used for game development)
         int randomTileGenerator() {
             int tileNum = dist(rng);
-            if (tileNum < 75) return 1; // Grass
+            if (tileNum < 75) return 0; // Empty
             if (tileNum < 85) return 2; // Bush
             if (tileNum < 95) return 3; // Fern
             return 4; // Rock
@@ -56,11 +57,13 @@ class Map {
 
             // Create Label Lookup Table & Resize Vector To Map 
             createLookupTable();
-            vectorMap.resize(mapHeight, std::vector<int>(mapWidth, 0));
+            vectorMapGround.resize(mapHeight, std::vector<int>(mapWidth, 0));
+            vectorMapObject.resize(mapHeight, std::vector<int>(mapWidth, 0));
 
             for (int i=0; i<mapHeight; i++) {
                 for (int j=0; j<mapWidth; j++) {
-                    vectorMap[i][j] = randomTileGenerator();
+                    vectorMapGround[i][j] = 1; // Always Generate Grass (Bottom)
+                    vectorMapObject[i][j] = randomTileGenerator();
                 }
             }
 
@@ -68,16 +71,26 @@ class Map {
 
         void createLookupTable() {
             // Managing Tiles
-            tileLookup[1] = {7, 5}; // Grass
-            tileLookup[2] = {12, 12}; // Bush
-            tileLookup[3] = {12, 16}; // Fern
-            tileLookup[4] = {14, 1}; // Rock
+            tileLookup[1] = {4, 6}; // Grass
+            tileLookup[2] = {11, 11}; // Bush
+            tileLookup[3] = {15, 11}; // Fern
+            tileLookup[4] = {0, 13}; // Rock
         }
 
         void displayVectorMap() {
+            std::cout << "Displaying Layer 1 (GROUND)" << std::endl;
             for (int i=0; i<mapHeight; i++) {
                 for (int j=0; j<mapWidth; j++) {
-                    std::cout << vectorMap[i][j] << ", ";
+                    std::cout << vectorMapGround[i][j] << ", ";
+                }
+                std::cout << std::endl;
+            }
+            std::cout << std::endl;
+
+            std::cout << "Displaying Layer 2 (OBJECTS)" << std::endl;
+            for (int i=0; i<mapHeight; i++) {
+                for (int j=0; j<mapWidth; j++) {
+                    std::cout << vectorMapObject[i][j] << ", ";
                 }
                 std::cout << std::endl;
             }
@@ -91,8 +104,8 @@ class Map {
 
             // Convert Map Position To Screen Position
             currentTile.setPosition(
-                i * tileSpacing,
-                j * tileSpacing
+                j * tileSpacing,
+                i * tileSpacing
             );
         }
 
@@ -100,7 +113,15 @@ class Map {
         void Draw(sf::RenderWindow& window) {
             for (int i=0; i<mapHeight; i++) {
                 for (int j=0; j<mapWidth; j++) {
-                    tileID = vectorMap[i][j];
+                    // Drawing Layer 1
+                    tileID = vectorMapGround[i][j];
+                    tilePos = tileLookup[tileID];
+                    TileToMap(tilePos, i, j);
+                    window.draw(currentTile);
+
+                    // Drawing Layer 2
+                    tileID = vectorMapObject[i][j];
+                    if (tileID == 0) {continue;}
                     tilePos = tileLookup[tileID];
                     TileToMap(tilePos, i, j);
                     window.draw(currentTile);
@@ -115,7 +136,7 @@ class Map {
 // To test the basic implementation (vectorMap), follow the following conditions:
 // In CMakeLists.txt, clear all respective source files except map.cpp
 // Ensure MapTest() is uncommented, and a main() function exists which runs MapTest()
-// The Output should be a 2d vector represented by randomly generated numbers (1...x), depending on the map population
+// The Output should be 2d vector srepresented by randomly generated numbers (1...x), depending on the map population / layers.
 // Uncomment the code below:
 
 // void MapTest() {

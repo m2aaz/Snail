@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp> 
 #include "tools.cpp"
+#include "map.cpp"
 #include <iostream>
 
 class Admin {
@@ -11,11 +12,14 @@ class Admin {
         sf::RenderWindow window;
         Clock delta;
         sf::Event event;
+        Map map;
+
 
     private:
         void Update() {}
         void Draw() {
             window.clear(sf::Color::Black);
+            map.Draw(window);
             delta.displayFPS(window);
             window.display();
         }
