@@ -22,12 +22,13 @@ Each tile in the tilesheet is accessed using grid-based coordinates, which are c
 - `tileSpacing` (size of each tile in pixels)
 - `tileLookup` (mapping of tile IDs to tilesheet positions)
 
-Example: tileLookup[2] = {11, 11}; // Bush tile in tilesheet grid
+Example: ```cpp tileLookup[2] = {11, 11}; // Bush tile in tilesheet grid ```
 
 This is later converted into pixel coordinates for rendering:
-- pixelX = tilePos.x * tileSpacing;
-- pixelY = tilePos.y * tileSpacing;
-
+```cpp
+pixelX = tilePos.x * tileSpacing;
+pixelY = tilePos.y * tileSpacing;
+```
 
 ---
 
