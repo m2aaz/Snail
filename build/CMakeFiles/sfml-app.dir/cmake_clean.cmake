@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/sfml-app.dir/admin.cpp.o"
-  "CMakeFiles/sfml-app.dir/admin.cpp.o.d"
+  "CMakeFiles/sfml-app.dir/chunks.cpp.o"
+  "CMakeFiles/sfml-app.dir/chunks.cpp.o.d"
   "sfml-app"
   "sfml-app.pdb"
 )

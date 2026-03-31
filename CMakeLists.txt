@@ -13,7 +13,7 @@ find_package(SFML 2.6 REQUIRED COMPONENTS graphics window system)
 
 # Add executable with all your source files
 add_executable(sfml-app
-    admin.cpp
+    chunks.cpp
 )
 
 # Include directories
