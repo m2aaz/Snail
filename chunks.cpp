@@ -63,30 +63,28 @@ class ChunkRenderer {
             TileLookup[4] = {3, 0};
         }
 
-        sf::Vector2f GetChunkCenterOffset(const sf::RenderWindow& window, const Chunk& chunk) {
+        sf::Vector2f GetChunkWorldPos(const Chunk& chunk) {
             float chunkPixelSize = chunkSize * tileSpacing;
-            sf::Vector2u winSize = window.getSize();
-            sf::Vector2f baseOffset = {(winSize.x - chunkPixelSize) / 2.f, (winSize.y - chunkPixelSize) / 2.f};
-            sf::Vector2f finalOffset = {
-                baseOffset.x + chunk.chunkCoordinates.x * chunkPixelSize,
-                baseOffset.y + chunk.chunkCoordinates.y * chunkPixelSize
-            }; return finalOffset;
+            return {
+                chunk.chunkCoordinates.x * chunkPixelSize,
+                chunk.chunkCoordinates.y * chunkPixelSize
+            };
         }
 
-        void RenderTile(sf::Vector2i tilePos, int row, int col, int offsetX, int offsetY) {
-            int posX = tilePos.x*tileSpacing;;
+        void RenderTile(sf::Vector2i tilePos, int row, int col, sf::Vector2f worldPos) {
+            int posX = tilePos.x*tileSpacing;
             int posY = tilePos.y*tileSpacing;
             currentTile.setTextureRect({posX, posY, tileSpacing, tileSpacing});
-            currentTile.setPosition(offsetX + col*tileSpacing, offsetY + row*tileSpacing);
+            currentTile.setPosition(worldPos.x + col*tileSpacing, worldPos.y + row*tileSpacing);
         }
 
         void RenderChunk(sf::RenderWindow& window, const Chunk& chunk) {
-            sf::Vector2f offset = GetChunkCenterOffset(window, chunk);
+            sf::Vector2f worldPos = GetChunkWorldPos(chunk);
             for (int i=0; i<chunkSize; i++) {
                 for (int j=0; j<chunkSize; j++) {
                     int ID = chunk.vectorMapGround[i][j];
                     sf::Vector2i tilePos = ConvertToPos(ID);
-                    RenderTile(tilePos, i, j, offset.x, offset.y);
+                    RenderTile(tilePos, i, j, worldPos);
                     window.draw(currentTile);
                 }
             }

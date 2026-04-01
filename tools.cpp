@@ -8,6 +8,7 @@ struct Camera {
     public:
         void Init(sf::RenderWindow& window) {
             cam = window.getDefaultView();
+            cam.setCenter(128, 128);
             window.setView(cam);
         }
 
