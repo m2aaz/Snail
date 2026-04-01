@@ -3,36 +3,6 @@
 #include "chunks.cpp"
 #include <iostream>
 
-struct Camera {
-    public:
-        sf::View cam;
-        float speed=5.0f;
-
-    public:
-        void Init(sf::RenderWindow& window) {
-            cam = window.getDefaultView();
-            window.setView(cam);
-        }
-
-        void Update(sf::RenderWindow& window) {
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-                cam.move(0, -speed);
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-                cam.move(0, speed);
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-                cam.move(-speed, 0);
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-                cam.move(speed, 0);
-
-            window.setView(cam);
-        }
-
-        void ResizeView(sf::RenderWindow& window, const int gameWidth, const int gameHeight) {
-            float aspectRatio = float(window.getSize().x)/float(window.getSize().y);
-            cam.setSize(gameWidth * aspectRatio, gameHeight);
-        }
-};
-
 class Admin {
     private:
         const int gameWidth = 1280;
@@ -43,6 +13,12 @@ class Admin {
         Clock delta;
         sf::Event event;
         Chunk newChunk;
+
+        Chunk newChunk1;
+        Chunk newChunk2;
+        Chunk newChunk3;
+        Chunk newChunk4;
+
         ChunkRenderer Renderer;
         Camera cam;
 
@@ -54,6 +30,11 @@ class Admin {
         void Draw() {
             window.clear(sf::Color(30, 30, 30));
             Renderer.RenderChunk(window, newChunk);
+            Renderer.RenderChunk(window, newChunk1);
+            Renderer.RenderChunk(window, newChunk2);
+            Renderer.RenderChunk(window, newChunk3);
+            Renderer.RenderChunk(window, newChunk4);
+
             delta.displayFPS(window);
             window.display();
         }
@@ -67,6 +48,17 @@ class Admin {
             // Initialise Chunk Renderer & Generate Chunk.
             Renderer.Init();
             GenerateChunk(newChunk);
+
+            GenerateChunk(newChunk1);
+            GenerateChunk(newChunk2);
+            GenerateChunk(newChunk3);
+            GenerateChunk(newChunk4);
+
+            newChunk1.setCoordinates(-1, 0);
+            newChunk2.setCoordinates(0, -1);
+            newChunk3.setCoordinates(0, 1);
+            newChunk4.setCoordinates(1, 0);
+
 
             // Set Window Frames.
             delta.Init();
