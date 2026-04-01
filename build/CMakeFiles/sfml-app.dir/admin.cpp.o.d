@@ -1036,7 +1036,7 @@ CMakeFiles/sfml-app.dir/admin.cpp.o: /Users/maazmasood/Snail/admin.cpp \
   /opt/homebrew/Cellar/sfml@2/2.6.2_1/include/SFML/Graphics/Sprite.hpp \
   /opt/homebrew/Cellar/sfml@2/2.6.2_1/include/SFML/Graphics/Text.hpp \
   /opt/homebrew/Cellar/sfml@2/2.6.2_1/include/SFML/Graphics/VertexBuffer.hpp \
-  /Users/maazmasood/Snail/tools.cpp /Users/maazmasood/Snail/map.cpp \
+  /Users/maazmasood/Snail/tools.cpp /Users/maazmasood/Snail/chunks.cpp \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/iostream \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/istream \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/random \

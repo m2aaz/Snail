@@ -112,33 +112,33 @@ class ChunkRenderer {
 
 };
 
+// Testing
+// int main() {
+//     sf::RenderWindow window;
+//     sf::Event event;
 
-int main() {
-    sf::RenderWindow window;
-    sf::Event event;
+//     Chunk chunk;
+//     GenerateChunk(chunk);
+//     Chunk chunk2;
+//     GenerateChunk(chunk2);
+//     chunk2.setCoordinates(0, 1);
 
-    Chunk chunk;
-    GenerateChunk(chunk);
-    Chunk chunk2;
-    GenerateChunk(chunk2);
-    chunk2.setCoordinates(0, 1);
+//     window.create(sf::VideoMode(1280, 720), "The Immortal Snail");
 
-    window.create(sf::VideoMode(1280, 720), "The Immortal Snail");
+//     ChunkRenderer Renderer;
+//     Renderer.Init();
 
-    ChunkRenderer Renderer;
-    Renderer.Init();
-
-    while (window.isOpen()) {
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                window.close();
-            }
-        }
-        window.clear(sf::Color(30, 30, 30));
-        Renderer.RenderChunk(window, chunk);
-        Renderer.RenderChunk(window, chunk2);
-        window.display();
-    }
+//     while (window.isOpen()) {
+//         while (window.pollEvent(event)) {
+//             if (event.type == sf::Event::Closed) {
+//                 window.close();
+//             }
+//         }
+//         window.clear(sf::Color(30, 30, 30));
+//         Renderer.RenderChunk(window, chunk);
+//         Renderer.RenderChunk(window, chunk2);
+//         window.display();
+//     }
 
 
-}
+// }

@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp> 
 #include "tools.cpp"
-#include "map.cpp"
+#include "chunks.cpp"
 #include <iostream>
 
 class Admin {
@@ -12,14 +12,15 @@ class Admin {
         sf::RenderWindow window;
         Clock delta;
         sf::Event event;
-        Map map;
+        Chunk newChunk;
+        ChunkRenderer Renderer;
 
 
     private:
         void Update() {}
         void Draw() {
-            window.clear(sf::Color::Black);
-            map.Draw(window);
+            window.clear(sf::Color(30, 30, 30));
+            Renderer.RenderChunk(window, newChunk);
             delta.displayFPS(window);
             window.display();
         }
@@ -27,8 +28,12 @@ class Admin {
     public:
         void Init() {
         
-            // Initialise Window
+            // Initialise Window.
             window.create(sf::VideoMode(gameWidth, gameHeight), "The Immortal Snail");
+
+            // Initialise Chunk Renderer & Generate Chunk.
+            Renderer.Init();
+            GenerateChunk(newChunk);
 
             // Set Window Frames.
             delta.Init();

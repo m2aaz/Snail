@@ -129,29 +129,29 @@ sfml-app/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/sfml-app.dir/build.make CMakeFiles/sfml-app.dir/build
 .PHONY : sfml-app/fast
 
-chunks.o: chunks.cpp.o
-.PHONY : chunks.o
+admin.o: admin.cpp.o
+.PHONY : admin.o
 
 # target to build an object file
-chunks.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/sfml-app.dir/build.make CMakeFiles/sfml-app.dir/chunks.cpp.o
-.PHONY : chunks.cpp.o
+admin.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sfml-app.dir/build.make CMakeFiles/sfml-app.dir/admin.cpp.o
+.PHONY : admin.cpp.o
 
-chunks.i: chunks.cpp.i
-.PHONY : chunks.i
+admin.i: admin.cpp.i
+.PHONY : admin.i
 
 # target to preprocess a source file
-chunks.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/sfml-app.dir/build.make CMakeFiles/sfml-app.dir/chunks.cpp.i
-.PHONY : chunks.cpp.i
+admin.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sfml-app.dir/build.make CMakeFiles/sfml-app.dir/admin.cpp.i
+.PHONY : admin.cpp.i
 
-chunks.s: chunks.cpp.s
-.PHONY : chunks.s
+admin.s: admin.cpp.s
+.PHONY : admin.s
 
 # target to generate assembly for a file
-chunks.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/sfml-app.dir/build.make CMakeFiles/sfml-app.dir/chunks.cpp.s
-.PHONY : chunks.cpp.s
+admin.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sfml-app.dir/build.make CMakeFiles/sfml-app.dir/admin.cpp.s
+.PHONY : admin.cpp.s
 
 # Help Target
 help:
@@ -162,9 +162,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... sfml-app"
-	@echo "... chunks.o"
-	@echo "... chunks.i"
-	@echo "... chunks.s"
+	@echo "... admin.o"
+	@echo "... admin.i"
+	@echo "... admin.s"
 .PHONY : help
 
 
