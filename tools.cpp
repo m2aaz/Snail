@@ -16,9 +16,9 @@ struct Camera {
                 cam.move(0, -speed);
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
                 cam.move(0, speed);
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-                cam.move(-speed, 0);
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+                cam.move(-speed, 0);
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
                 cam.move(speed, 0);
 
             window.setView(cam);

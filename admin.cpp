@@ -3,7 +3,7 @@
 #include "chunks.cpp"
 #include <iostream>
 
-class Admin {
+class GameOperator {
     private:
         const int gameWidth = 1280;
         const int gameHeight = 720;
@@ -91,7 +91,7 @@ class Admin {
 };
 
 int main() {
-    Admin gameOperator;
-    gameOperator.Init();
-    gameOperator.Run();
+    GameOperator admin;
+    admin.Init();
+    admin.Run();
 }
