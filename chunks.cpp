@@ -9,17 +9,6 @@ static constexpr int chunkSize = 16;
 static constexpr int tileSpacing = 16;
 std::mt19937 rng(std::random_device{}());
 std::uniform_int_distribution<int> dist(1, 4);
-std::unordered_map<int, sf::Vector2i> TileLookup;
-
-void createLookup() {
-    TileLookup[0] = {4, 6};
-    TileLookup[1] = {0, 0};
-    TileLookup[2] = {1, 0};
-    TileLookup[3] = {2, 0};
-    TileLookup[4] = {3, 0};
-}
-
-sf::Vector2i ConvertToPos(int itemID) {return TileLookup.at(itemID);}
 
 class Chunk {
     public: 
@@ -30,6 +19,9 @@ class Chunk {
         Chunk() {
             vectorMapGround.resize(chunkSize, std::vector<int>(chunkSize, 0));
             vectorMapObject.resize(chunkSize, std::vector<int>(chunkSize, 0));
+        }
+        void setCoordinates(int posX, int posY) {
+            chunkCoordinates = sf::Vector2i(posX, posY);
         }
 };
 
@@ -43,72 +35,98 @@ void GenerateChunk(Chunk& chunk) {
     }
 }
 
+class ChunkRenderer {
+    private:
+        sf::Texture texture;
+        sf::Sprite currentTile;
+        std::unordered_map<int, sf::Vector2i> TileLookup;
+        std::string fileloc="tilemap/era1.png";
 
-
-void TileToChunk(sf::Sprite& currentTile, sf::Vector2i tilePos, int row, int col, int offsetX, int offsetY) {
-    int posX = tilePos.x*tileSpacing;;
-    int posY = tilePos.y*tileSpacing;
-    currentTile.setTextureRect({posX, posY, tileSpacing, tileSpacing});
-    currentTile.setPosition(offsetX + col*tileSpacing, offsetY + row*tileSpacing);
-}
-
-void RenderChunk(sf::RenderWindow& window, sf::Sprite& currentTile, const Chunk& chunk) {
-
-    // Centering
-    int chunkPixelSize = chunkSize * tileSpacing;
-    sf::Vector2u winSize = window.getSize();
-    float offsetX = (winSize.x - chunkPixelSize) / 2.f;
-    float offsetY = (winSize.y - chunkPixelSize) / 2.f;
-    // ---------
-
-    for (int i=0; i<chunkSize; i++) {
-        for (int j=0; j<chunkSize; j++) {
-            int ID = chunk.vectorMapGround[i][j];
-            sf::Vector2i tilePos = ConvertToPos(ID);
-            TileToChunk(currentTile, tilePos, i, j, offsetX, offsetY);
-            window.draw(currentTile);
+    public:
+        void Init() {
+            createLookup();
+            LoadTexture();
         }
-    }
-}
 
-void DisplayChunk(const Chunk& chunk) {
-    for (int i=0; i<chunkSize; i++) {
-        for (int j=0; j<chunkSize; j++) {
-            std::cout << chunk.vectorMapGround[i][j] << ", ";
+        void LoadTexture() {if (texture.loadFromFile(fileloc)) {currentTile.setTexture(texture);}}
+        sf::Vector2i ConvertToPos(int itemID) {
+            auto it = TileLookup.find(itemID);
+            if (it == TileLookup.end()) return {0, 0};
+            return it->second;
         }
-        std::cout << std::endl;
-    }
 
-    std::cout << std::endl; 
-
-    for (int i=0; i<chunkSize; i++) {
-        for (int j=0; j<chunkSize; j++) {
-            std::cout << chunk.vectorMapObject[i][j] << ", ";
+        void createLookup() {
+            TileLookup[0] = {4, 6};
+            TileLookup[1] = {0, 0};
+            TileLookup[2] = {1, 0};
+            TileLookup[3] = {2, 0};
+            TileLookup[4] = {3, 0};
         }
-        std::cout << std::endl;
-    }
-}
 
-void LoadTexture(sf::Sprite& currentTile, sf::Texture& texture) {
-    std::string fileloc="tilemap/era1.png";
+        sf::Vector2f GetChunkCenterOffset(const sf::RenderWindow& window, const Chunk& chunk) {
+            float chunkPixelSize = chunkSize * tileSpacing;
+            sf::Vector2u winSize = window.getSize();
+            sf::Vector2f baseOffset = {(winSize.x - chunkPixelSize) / 2.f, (winSize.y - chunkPixelSize) / 2.f};
+            sf::Vector2f finalOffset = {
+                baseOffset.x + chunk.chunkCoordinates.x * chunkPixelSize,
+                baseOffset.y + chunk.chunkCoordinates.y * chunkPixelSize
+            }; return finalOffset;
+        }
 
-    if (texture.loadFromFile(fileloc)) {
-        currentTile.setTexture(texture);
-    }
-}
+        void RenderTile(sf::Vector2i tilePos, int row, int col, int offsetX, int offsetY) {
+            int posX = tilePos.x*tileSpacing;;
+            int posY = tilePos.y*tileSpacing;
+            currentTile.setTextureRect({posX, posY, tileSpacing, tileSpacing});
+            currentTile.setPosition(offsetX + col*tileSpacing, offsetY + row*tileSpacing);
+        }
+
+        void RenderChunk(sf::RenderWindow& window, const Chunk& chunk) {
+            sf::Vector2f offset = GetChunkCenterOffset(window, chunk);
+            for (int i=0; i<chunkSize; i++) {
+                for (int j=0; j<chunkSize; j++) {
+                    int ID = chunk.vectorMapGround[i][j];
+                    sf::Vector2i tilePos = ConvertToPos(ID);
+                    RenderTile(tilePos, i, j, offset.x, offset.y);
+                    window.draw(currentTile);
+                }
+            }
+        }
+
+        void DisplayChunk(const Chunk& chunk) {
+            for (int i=0; i<chunkSize; i++) {
+                for (int j=0; j<chunkSize; j++) {
+                    std::cout << chunk.vectorMapGround[i][j] << ", ";
+                }
+                std::cout << std::endl;
+            }
+
+            std::cout << std::endl; 
+
+            for (int i=0; i<chunkSize; i++) {
+                for (int j=0; j<chunkSize; j++) {
+                    std::cout << chunk.vectorMapObject[i][j] << ", ";
+                }
+                std::cout << std::endl;
+            }
+        }
+
+};
+
 
 int main() {
     sf::RenderWindow window;
     sf::Event event;
-    sf::Texture texture;
-    sf::Sprite currentTile;
-    LoadTexture(currentTile, texture);
 
     Chunk chunk;
     GenerateChunk(chunk);
+    Chunk chunk2;
+    GenerateChunk(chunk2);
+    chunk2.setCoordinates(0, 1);
+
     window.create(sf::VideoMode(1280, 720), "The Immortal Snail");
 
-    createLookup();
+    ChunkRenderer Renderer;
+    Renderer.Init();
 
     while (window.isOpen()) {
         while (window.pollEvent(event)) {
@@ -117,7 +135,8 @@ int main() {
             }
         }
         window.clear(sf::Color(30, 30, 30));
-        RenderChunk(window, currentTile, chunk);
+        Renderer.RenderChunk(window, chunk);
+        Renderer.RenderChunk(window, chunk2);
         window.display();
     }
 
