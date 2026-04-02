@@ -1,4 +1,4 @@
-
+#pragma once
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <random>
@@ -7,8 +7,38 @@
 
 static constexpr int chunkSize = 16;
 static constexpr int tileSpacing = 32;
+static constexpr float tileWidth  = 32;
+static constexpr float tileHeight = 32;
 std::mt19937 rng(std::random_device{}());
 std::uniform_int_distribution<int> dist(1, 4);
+
+
+// Helper Functions
+sf::Vector2f GridToWorld(float col, float row, sf::Vector2f worldPos) {
+    return {
+        worldPos.x + (col - row) * (tileWidth / 2.0f),
+        worldPos.y + (col + row) * (tileHeight / 4.0f)
+    };
+}
+
+sf::Vector2i WorldToGrid(sf::Vector2f world) {
+    float a = world.x / (tileWidth / 2.0f);
+    float b = world.y / (tileHeight / 4.0f);
+
+    return {
+        (int)std::floor((a + b) / 2.0f),
+        (int)std::floor((b - a) / 2.0f)
+    };
+}
+
+sf::Vector2i WorldToChunk(sf::Vector2f world) {
+    sf::Vector2i grid = WorldToGrid(world);
+
+    return {
+        (int)std::floor((float)grid.x / chunkSize),
+        (int)std::floor((float)grid.y / chunkSize)
+    };
+}
 
 class Chunk {
     public: 
@@ -22,8 +52,8 @@ class Chunk {
             vectorMapObject.resize(chunkSize, std::vector<int>(chunkSize, 0));
             vectorMapElevation.resize(chunkSize, std::vector<int>(chunkSize, 0));
         }
-        void setCoordinates(int posX, int posY) {
-            chunkCoordinates = sf::Vector2i(posX, posY);
+        void setCoordinates(sf::Vector2i coord) {
+            chunkCoordinates = coord;
         }
 };
 
@@ -71,27 +101,11 @@ void GenerateChunk(Chunk& chunk) {
 }
 
 // Spawns A Chunk @ Location (Based on GRID COORDINATES.)
-void spawnChunk(int x, int y, ChunkMap& cMap) {
+void spawnChunk(sf::Vector2i coord, ChunkMap& cMap) {
     Chunk chunk;
-    chunk.setCoordinates(x, y);
+    chunk.setCoordinates(coord);
     GenerateChunk(chunk);
     cMap.Add(chunk);
-}
-
-sf::Vector2i WorldToChunk(sf::Vector2f mouseWorld) {
-
-    // Size of each tile (vertically & horizontally)
-    float isoWidth  = chunkSize * (tileSpacing / 2.0f);
-    float isoHeight = chunkSize * (tileSpacing / 2.0f);
-
-    // Converting coordinates into grid coordinates by dividing (ex. )
-    float a = mouseWorld.x / isoWidth;
-    float b = mouseWorld.y / isoHeight;
-
-    int chunkX = (int)std::floor((a + b) / 2.0f);
-    int chunkY = (int)std::floor((b - a) / 2.0f);
-
-    return sf::Vector2i(chunkX, chunkY);
 }
 
 void placeChunk(sf::RenderWindow& window, ChunkMap& cMap) {
@@ -99,9 +113,9 @@ void placeChunk(sf::RenderWindow& window, ChunkMap& cMap) {
     sf::Vector2f mouseWorld = window.mapPixelToCoords(mouseScreen);
 
     sf::Vector2i chunkCoord = WorldToChunk(mouseWorld);
-    int chunkX = chunkCoord.x; int chunkY = chunkCoord.y;
+
     if (!cMap.Exists(chunkCoord)) {
-        spawnChunk(chunkX, chunkY, cMap);
+        spawnChunk(chunkCoord, cMap);
     } else {std::cout << "Chunk Already Exists." << std::endl;}
 }
 
@@ -110,7 +124,7 @@ void deleteChunk(sf::RenderWindow& window, ChunkMap& cMap) {
     sf::Vector2f mouseWorld = window.mapPixelToCoords(mouseScreen);
 
     sf::Vector2i chunkCoord = WorldToChunk(mouseWorld);
-    int chunkX = chunkCoord.x; int chunkY = chunkCoord.y;
+
     if (cMap.Exists(chunkCoord)) {
         cMap.Remove(chunkCoord);
     } else {std::cout << "Chunk Doesn't Exists." << std::endl;}
@@ -130,6 +144,7 @@ class ChunkRenderer {
         }
 
         void LoadTexture() {if (texture.loadFromFile(fileloc)) {currentTile.setTexture(texture);}}
+
         sf::Vector2i ConvertToPos(int itemID) {
             auto it = TileLookup.find(itemID);
             if (it == TileLookup.end()) return {0, 0};
@@ -145,8 +160,8 @@ class ChunkRenderer {
         }
 
         sf::Vector2f GetChunkWorldPos(const Chunk& chunk) {
-            float isoWidth  = chunkSize * (tileSpacing / 2.0f);
-            float isoHeight = chunkSize * (tileSpacing / 2.0f);
+            float isoWidth  = chunkSize * (tileWidth / 2.0f);
+            float isoHeight = chunkSize * (tileHeight / 2.0f);
             return {
                 (chunk.chunkCoordinates.x - chunk.chunkCoordinates.y) * isoWidth,
                 (chunk.chunkCoordinates.x + chunk.chunkCoordinates.y) * isoHeight
@@ -156,10 +171,10 @@ class ChunkRenderer {
         void RenderTile(sf::Vector2i tilePos, int row, int col, sf::Vector2f worldPos) {
             int posX = tilePos.x*tileSpacing;
             int posY = tilePos.y*tileSpacing;
+            sf::Vector2f isoCoord = GridToWorld(row, col, worldPos);
             currentTile.setTextureRect({posX, posY, tileSpacing, tileSpacing});
             currentTile.setPosition(
-                worldPos.x + (col - row) * (tileSpacing / 2.0f),
-                worldPos.y + (col + row) * (tileSpacing / 2.0f)
+                isoCoord.x, isoCoord.y
             );
         }
 

@@ -1,18 +1,22 @@
+#pragma once
 #include <SFML/Graphics.hpp>
+#include "chunks.cpp"
 
 struct Camera {
     public:
         sf::View cam;
         float speed=20.0f;
         int tileSpacing = 32;
+        int tileWidth = 32;
+        int tileHeight = 32;
         int chunkSize = 16;
 
     public:
         void Init(sf::RenderWindow& window) {
             cam = window.getDefaultView();
-            float isoWidth  = chunkSize * (tileSpacing / 2.0f); 
-            float isoHeight = chunkSize * (tileSpacing / 2.0f);
-            cam.setCenter(isoWidth/(tileSpacing/2), isoHeight); 
+            float isoWidth  = chunkSize * (tileWidth / 2.0f); 
+            float isoHeight = chunkSize * (tileHeight / 2.0f);
+            cam.setCenter(isoWidth/(tileWidth/2), isoHeight); 
             window.setView(cam);
         }
 
@@ -34,6 +38,7 @@ struct Camera {
             cam.setSize(gameWidth * aspectRatio, gameHeight);
         }
 };
+
 
 class Clock {
     private:

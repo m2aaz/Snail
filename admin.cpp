@@ -1,3 +1,4 @@
+#pragma once
 #include <SFML/Graphics.hpp> 
 #include "tools.cpp"
 #include "chunks.cpp"
@@ -43,7 +44,7 @@ class GameOperator {
             // spawnChunk(0, 1, cMap);
             // spawnChunk(1, 0, cMap);
             
-            spawnChunk(0, 0, cMap);
+            spawnChunk(sf::Vector2i(0, 0), cMap);
 
             // Set Window Frames.
             delta.Init();
