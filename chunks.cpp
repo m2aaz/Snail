@@ -70,7 +70,7 @@ void GenerateChunk(Chunk& chunk) {
     }
 }
 
-// Spawns A Chunk @ Location
+// Spawns A Chunk @ Location (Based on GRID COORDINATES.)
 void spawnChunk(int x, int y, ChunkMap& cMap) {
     Chunk chunk;
     chunk.setCoordinates(x, y);
@@ -79,9 +79,12 @@ void spawnChunk(int x, int y, ChunkMap& cMap) {
 }
 
 sf::Vector2i WorldToChunk(sf::Vector2f mouseWorld) {
+
+    // Size of each tile (vertically & horizontally)
     float isoWidth  = chunkSize * (tileSpacing / 2.0f);
     float isoHeight = chunkSize * (tileSpacing / 2.0f);
 
+    // Converting coordinates into grid coordinates by dividing (ex. )
     float a = mouseWorld.x / isoWidth;
     float b = mouseWorld.y / isoHeight;
 
