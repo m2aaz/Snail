@@ -12,15 +12,9 @@ class GameOperator {
         sf::RenderWindow window;
         Clock delta;
         sf::Event event;
-        Chunk newChunk;
-
-        Chunk newChunk1;
-        Chunk newChunk2;
-        Chunk newChunk3;
-        Chunk newChunk4;
-
         ChunkRenderer Renderer;
         Camera cam;
+        ChunkMap cMap;
 
 
     private:
@@ -29,11 +23,7 @@ class GameOperator {
         }
         void Draw() {
             window.clear(sf::Color(30, 30, 30));
-            Renderer.RenderChunk(window, newChunk);
-            Renderer.RenderChunk(window, newChunk1);
-            Renderer.RenderChunk(window, newChunk2);
-            Renderer.RenderChunk(window, newChunk3);
-            Renderer.RenderChunk(window, newChunk4);
+            Renderer.RenderChunkMap(window, cMap);
 
             delta.displayFPS(window);
             window.display();
@@ -47,18 +37,11 @@ class GameOperator {
 
             // Initialise Chunk Renderer & Generate Chunk.
             Renderer.Init();
-            GenerateChunk(newChunk);
-
-            GenerateChunk(newChunk1);
-            GenerateChunk(newChunk2);
-            GenerateChunk(newChunk3);
-            GenerateChunk(newChunk4);
-
-            newChunk1.setCoordinates(-1, 0);
-            newChunk2.setCoordinates(0, -1);
-            newChunk3.setCoordinates(0, 1);
-            newChunk4.setCoordinates(1, 0);
-
+            spawnChunk(-1, 0, cMap);
+            spawnChunk(0, -1, cMap);
+            spawnChunk(0, 1, cMap);
+            spawnChunk(1, 0, cMap);
+            spawnChunk(0, 0, cMap);
 
             // Set Window Frames.
             delta.Init();
@@ -82,6 +65,14 @@ class GameOperator {
             while (window.pollEvent(event)) {
                 if (event.type == sf::Event::Resized) 
                 {cam.ResizeView(window, gameWidth, gameHeight);}
+                if (event.type == sf::Event::MouseButtonPressed) {
+                    if (event.mouseButton.button == sf::Mouse::Left) {
+                        placeChunk(window, cMap);
+                    }
+                    if (event.mouseButton.button == sf::Mouse::Right) {
+                        deleteChunk(window, cMap);
+                    }
+                }
                 if (event.type == sf::Event::Closed) 
                 {window.close(); std::cout << "Window Closed." << std::endl;}
             }

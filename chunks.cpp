@@ -6,7 +6,7 @@
 #include <unordered_map>
 
 static constexpr int chunkSize = 16;
-static constexpr int tileSpacing = 16;
+static constexpr int tileSpacing = 32;
 std::mt19937 rng(std::random_device{}());
 std::uniform_int_distribution<int> dist(1, 4);
 
@@ -14,25 +14,103 @@ class Chunk {
     public: 
         std::vector<std::vector<int>> vectorMapGround;
         std::vector<std::vector<int>> vectorMapObject;
+        std::vector<std::vector<int>> vectorMapElevation;
         sf::Vector2i chunkCoordinates;
 
         Chunk() {
             vectorMapGround.resize(chunkSize, std::vector<int>(chunkSize, 0));
             vectorMapObject.resize(chunkSize, std::vector<int>(chunkSize, 0));
+            vectorMapElevation.resize(chunkSize, std::vector<int>(chunkSize, 0));
         }
         void setCoordinates(int posX, int posY) {
             chunkCoordinates = sf::Vector2i(posX, posY);
         }
 };
 
+struct ChunkMap {
+    std::unordered_map<std::string, Chunk> chunkMap;
+
+    std::string setChunkID(sf::Vector2i coord) {
+        return std::to_string(coord.x) + "," + std::to_string(coord.y);
+    }
+
+    void Add(Chunk& chunk) {
+        sf::Vector2i coordinates = chunk.chunkCoordinates;
+        std::string chunkID = setChunkID(coordinates);
+        chunkMap[chunkID] = chunk;
+    }
+
+    void Remove(sf::Vector2i coordinates) {
+        std::string chunkID = setChunkID(coordinates);
+        chunkMap.erase(chunkID);
+    }
+
+    Chunk& Get(sf::Vector2i coordinates) {
+        std::string chunkID = setChunkID(coordinates);
+        return chunkMap[chunkID];
+    }   
+
+    bool Exists(sf::Vector2i coordinates) {
+        std::string chunkID = setChunkID(coordinates);
+        auto iterator = chunkMap.find(chunkID);
+        if (iterator == chunkMap.end()) {
+            return false;
+        } else {return true;}
+    }
+};
+
 // 0: Grass, 1: Anything else.
 void GenerateChunk(Chunk& chunk) {
     for (int i=0; i<chunkSize; i++) {
         for (int j=0; j<chunkSize; j++) {
+            chunk.vectorMapElevation[i][j] = 1;
             chunk.vectorMapGround[i][j] = 0;
             chunk.vectorMapObject[i][j] = dist(rng);
         }
     }
+}
+
+// Spawns A Chunk @ Location
+void spawnChunk(int x, int y, ChunkMap& cMap) {
+    Chunk chunk;
+    chunk.setCoordinates(x, y);
+    GenerateChunk(chunk);
+    cMap.Add(chunk);
+}
+
+sf::Vector2i WorldToChunk(sf::Vector2f mouseWorld) {
+    float isoWidth  = chunkSize * (tileSpacing / 2.0f);
+    float isoHeight = chunkSize * (tileSpacing / 2.0f);
+
+    float a = mouseWorld.x / isoWidth;
+    float b = mouseWorld.y / isoHeight;
+
+    int chunkX = (int)std::floor((a + b) / 2.0f);
+    int chunkY = (int)std::floor((b - a) / 2.0f);
+
+    return sf::Vector2i(chunkX, chunkY);
+}
+
+void placeChunk(sf::RenderWindow& window, ChunkMap& cMap) {
+    sf::Vector2i mouseScreen = sf::Mouse::getPosition(window);
+    sf::Vector2f mouseWorld = window.mapPixelToCoords(mouseScreen);
+
+    sf::Vector2i chunkCoord = WorldToChunk(mouseWorld);
+    int chunkX = chunkCoord.x; int chunkY = chunkCoord.y;
+    if (!cMap.Exists(chunkCoord)) {
+        spawnChunk(chunkX, chunkY, cMap);
+    } else {std::cout << "Chunk Already Exists." << std::endl;}
+}
+
+void deleteChunk(sf::RenderWindow& window, ChunkMap& cMap) {
+    sf::Vector2i mouseScreen = sf::Mouse::getPosition(window);
+    sf::Vector2f mouseWorld = window.mapPixelToCoords(mouseScreen);
+
+    sf::Vector2i chunkCoord = WorldToChunk(mouseWorld);
+    int chunkX = chunkCoord.x; int chunkY = chunkCoord.y;
+    if (cMap.Exists(chunkCoord)) {
+        cMap.Remove(chunkCoord);
+    } else {std::cout << "Chunk Doesn't Exists." << std::endl;}
 }
 
 class ChunkRenderer {
@@ -56,7 +134,7 @@ class ChunkRenderer {
         }
 
         void createLookup() {
-            TileLookup[0] = {4, 6};
+            TileLookup[0] = {7, 3};
             TileLookup[1] = {0, 0};
             TileLookup[2] = {1, 0};
             TileLookup[3] = {2, 0};
@@ -64,10 +142,11 @@ class ChunkRenderer {
         }
 
         sf::Vector2f GetChunkWorldPos(const Chunk& chunk) {
-            float chunkPixelSize = chunkSize * tileSpacing;
+            float isoWidth  = chunkSize * (tileSpacing / 2.0f);
+            float isoHeight = chunkSize * (tileSpacing / 2.0f);
             return {
-                chunk.chunkCoordinates.x * chunkPixelSize,
-                chunk.chunkCoordinates.y * chunkPixelSize
+                (chunk.chunkCoordinates.x - chunk.chunkCoordinates.y) * isoWidth,
+                (chunk.chunkCoordinates.x + chunk.chunkCoordinates.y) * isoHeight
             };
         }
 
@@ -75,18 +154,29 @@ class ChunkRenderer {
             int posX = tilePos.x*tileSpacing;
             int posY = tilePos.y*tileSpacing;
             currentTile.setTextureRect({posX, posY, tileSpacing, tileSpacing});
-            currentTile.setPosition(worldPos.x + col*tileSpacing, worldPos.y + row*tileSpacing);
+            currentTile.setPosition(
+                worldPos.x + (col - row) * (tileSpacing / 2.0f),
+                worldPos.y + (col + row) * (tileSpacing / 2.0f)
+            );
         }
 
         void RenderChunk(sf::RenderWindow& window, const Chunk& chunk) {
             sf::Vector2f worldPos = GetChunkWorldPos(chunk);
             for (int i=0; i<chunkSize; i++) {
                 for (int j=0; j<chunkSize; j++) {
-                    int ID = chunk.vectorMapGround[i][j];
-                    sf::Vector2i tilePos = ConvertToPos(ID);
-                    RenderTile(tilePos, i, j, worldPos);
-                    window.draw(currentTile);
+                    if (chunk.vectorMapElevation[i][j] > 0) {
+                        int ID = chunk.vectorMapGround[i][j];
+                        sf::Vector2i tilePos = ConvertToPos(ID);
+                        RenderTile(tilePos, i, j, worldPos);
+                        window.draw(currentTile);
+                    }
                 }
+            }
+        }
+
+        void RenderChunkMap(sf::RenderWindow& window, ChunkMap& cMap) {
+            for (auto& [key, chunk] : cMap.chunkMap) {
+                RenderChunk(window, chunk);
             }
         }
 
