@@ -4,11 +4,15 @@ struct Camera {
     public:
         sf::View cam;
         float speed=20.0f;
+        int tileSpacing = 32;
+        int chunkSize = 16;
 
     public:
         void Init(sf::RenderWindow& window) {
             cam = window.getDefaultView();
-            cam.setCenter(128, 128);
+            float isoWidth  = chunkSize * (tileSpacing / 2.0f); 
+            float isoHeight = chunkSize * (tileSpacing / 2.0f);
+            cam.setCenter(isoWidth/(tileSpacing/2), isoHeight); 
             window.setView(cam);
         }
 

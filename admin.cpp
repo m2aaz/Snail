@@ -37,10 +37,12 @@ class GameOperator {
 
             // Initialise Chunk Renderer & Generate Chunk.
             Renderer.Init();
-            spawnChunk(-1, 0, cMap);
-            spawnChunk(0, -1, cMap);
-            spawnChunk(0, 1, cMap);
-            spawnChunk(1, 0, cMap);
+
+            // spawnChunk(-1, 0, cMap);
+            // spawnChunk(0, -1, cMap);
+            // spawnChunk(0, 1, cMap);
+            // spawnChunk(1, 0, cMap);
+            
             spawnChunk(0, 0, cMap);
 
             // Set Window Frames.
