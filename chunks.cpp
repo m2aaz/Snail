@@ -13,11 +13,11 @@ std::mt19937 rng(std::random_device{}());
 std::uniform_int_distribution<int> dist(1, 4);
 
 
-// Helper Functions
-sf::Vector2f GridToWorld(float col, float row, sf::Vector2f worldPos) {
+// Isometric Conversion Function
+sf::Vector2f GridToWorld(float row, float col) {
     return {
-        worldPos.x + (col - row) * (tileWidth / 2.0f),
-        worldPos.y + (col + row) * (tileHeight / 4.0f)
+        (col - row) * (tileWidth / 2.0f),
+        (col + row) * (tileHeight / 4.0f)
     };
 }
 
@@ -160,21 +160,18 @@ class ChunkRenderer {
         }
 
         sf::Vector2f GetChunkWorldPos(const Chunk& chunk) {
-            float isoWidth  = chunkSize * (tileWidth / 2.0f);
-            float isoHeight = chunkSize * (tileHeight / 2.0f);
-            return {
-                (chunk.chunkCoordinates.x - chunk.chunkCoordinates.y) * isoWidth,
-                (chunk.chunkCoordinates.x + chunk.chunkCoordinates.y) * isoHeight
-            };
+            float chunkCol = chunk.chunkCoordinates.x * chunkSize;
+            float chunkRow = chunk.chunkCoordinates.y * chunkSize;
+            return GridToWorld(chunkRow, chunkCol);
         }
 
         void RenderTile(sf::Vector2i tilePos, int row, int col, sf::Vector2f worldPos) {
             int posX = tilePos.x*tileSpacing;
             int posY = tilePos.y*tileSpacing;
-            sf::Vector2f isoCoord = GridToWorld(row, col, worldPos);
+            sf::Vector2f isoCoord = GridToWorld(row, col);
             currentTile.setTextureRect({posX, posY, tileSpacing, tileSpacing});
             currentTile.setPosition(
-                isoCoord.x, isoCoord.y
+                std::round(isoCoord.x + worldPos.x), std::round(isoCoord.y + worldPos.y)
             );
         }
 
@@ -217,34 +214,3 @@ class ChunkRenderer {
         }
 
 };
-
-// Testing
-// int main() {
-//     sf::RenderWindow window;
-//     sf::Event event;
-
-//     Chunk chunk;
-//     GenerateChunk(chunk);
-//     Chunk chunk2;
-//     GenerateChunk(chunk2);
-//     chunk2.setCoordinates(0, 1);
-
-//     window.create(sf::VideoMode(1280, 720), "The Immortal Snail");
-
-//     ChunkRenderer Renderer;
-//     Renderer.Init();
-
-//     while (window.isOpen()) {
-//         while (window.pollEvent(event)) {
-//             if (event.type == sf::Event::Closed) {
-//                 window.close();
-//             }
-//         }
-//         window.clear(sf::Color(30, 30, 30));
-//         Renderer.RenderChunk(window, chunk);
-//         Renderer.RenderChunk(window, chunk2);
-//         window.display();
-//     }
-
-
-// }

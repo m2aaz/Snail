@@ -38,12 +38,6 @@ class GameOperator {
 
             // Initialise Chunk Renderer & Generate Chunk.
             Renderer.Init();
-
-            // spawnChunk(-1, 0, cMap);
-            // spawnChunk(0, -1, cMap);
-            // spawnChunk(0, 1, cMap);
-            // spawnChunk(1, 0, cMap);
-            
             spawnChunk(sf::Vector2i(0, 0), cMap);
 
             // Set Window Frames.
@@ -70,10 +64,10 @@ class GameOperator {
                 {cam.ResizeView(window, gameWidth, gameHeight);}
                 if (event.type == sf::Event::MouseButtonPressed) {
                     if (event.mouseButton.button == sf::Mouse::Left) {
-                        placeChunk(window, cMap);
+                        // placeChunk(window, cMap);
                     }
                     if (event.mouseButton.button == sf::Mouse::Right) {
-                        deleteChunk(window, cMap);
+                        // deleteChunk(window, cMap);
                     }
                 }
                 if (event.type == sf::Event::Closed) 

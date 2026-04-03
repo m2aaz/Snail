@@ -7,16 +7,13 @@ struct Camera {
         sf::View cam;
         float speed=20.0f;
         int tileSpacing = 32;
-        int tileWidth = 32;
-        int tileHeight = 32;
         int chunkSize = 16;
 
     public:
         void Init(sf::RenderWindow& window) {
             cam = window.getDefaultView();
-            float isoWidth  = chunkSize * (tileWidth / 2.0f); 
-            float isoHeight = chunkSize * (tileHeight / 2.0f);
-            cam.setCenter(isoWidth/(tileWidth/2), isoHeight); 
+            sf::Vector2f centre = GridToWorld(chunkSize / 2.0f, chunkSize / 2.0f);
+            cam.setCenter(centre);
             window.setView(cam);
         }
 
