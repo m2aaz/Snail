@@ -10,7 +10,7 @@ static constexpr int tileSpacing = 32;
 static constexpr float tileWidth  = 32;
 static constexpr float tileHeight = 32;
 std::mt19937 rng(std::random_device{}());
-std::uniform_int_distribution<int> dist(1, 4);
+std::uniform_int_distribution<int> dist(0, 10);
 
 
 // Isometric Conversion Function
@@ -95,7 +95,12 @@ void GenerateChunk(Chunk& chunk) {
         for (int j=0; j<chunkSize; j++) {
             chunk.vectorMapElevation[i][j] = 1;
             chunk.vectorMapGround[i][j] = 0;
-            chunk.vectorMapObject[i][j] = dist(rng);
+            int currentPred = dist(rng);
+            if (currentPred <= 1) {
+                chunk.vectorMapObject[i][j] = 1;
+            } else {
+                chunk.vectorMapObject[i][j] = 0;
+            }
         }
     }
 }
@@ -108,27 +113,31 @@ void spawnChunk(sf::Vector2i coord, ChunkMap& cMap) {
     cMap.Add(chunk);
 }
 
-void placeChunk(sf::RenderWindow& window, ChunkMap& cMap) {
-    sf::Vector2i mouseScreen = sf::Mouse::getPosition(window);
-    sf::Vector2f mouseWorld = window.mapPixelToCoords(mouseScreen);
 
-    sf::Vector2i chunkCoord = WorldToChunk(mouseWorld);
+struct ChunkBehaviour {
+    void placeChunk(sf::RenderWindow& window, ChunkMap& cMap) {
+        sf::Vector2i mouseScreen = sf::Mouse::getPosition(window);
+        sf::Vector2f mouseWorld = window.mapPixelToCoords(mouseScreen);
 
-    if (!cMap.Exists(chunkCoord)) {
-        spawnChunk(chunkCoord, cMap);
-    } else {std::cout << "Chunk Already Exists." << std::endl;}
-}
+        sf::Vector2i chunkCoord = WorldToChunk(mouseWorld);
 
-void deleteChunk(sf::RenderWindow& window, ChunkMap& cMap) {
-    sf::Vector2i mouseScreen = sf::Mouse::getPosition(window);
-    sf::Vector2f mouseWorld = window.mapPixelToCoords(mouseScreen);
+        if (!cMap.Exists(chunkCoord)) {
+            spawnChunk(chunkCoord, cMap);
+        } else {std::cout << "Chunk Already Exists." << std::endl;}
+    }
 
-    sf::Vector2i chunkCoord = WorldToChunk(mouseWorld);
+    void deleteChunk(sf::RenderWindow& window, ChunkMap& cMap) {
+        sf::Vector2i mouseScreen = sf::Mouse::getPosition(window);
+        sf::Vector2f mouseWorld = window.mapPixelToCoords(mouseScreen);
 
-    if (cMap.Exists(chunkCoord)) {
-        cMap.Remove(chunkCoord);
-    } else {std::cout << "Chunk Doesn't Exists." << std::endl;}
-}
+        sf::Vector2i chunkCoord = WorldToChunk(mouseWorld);
+
+        if (cMap.Exists(chunkCoord)) {
+            cMap.Remove(chunkCoord);
+        } else {std::cout << "Chunk Doesn't Exists." << std::endl;}
+    }
+};
+
 
 class ChunkRenderer {
     private:
@@ -153,7 +162,7 @@ class ChunkRenderer {
 
         void createLookup() {
             TileLookup[0] = {7, 3};
-            TileLookup[1] = {0, 0};
+            TileLookup[1] = {1, 6};
             TileLookup[2] = {1, 0};
             TileLookup[3] = {2, 0};
             TileLookup[4] = {3, 0};
@@ -184,6 +193,13 @@ class ChunkRenderer {
                         sf::Vector2i tilePos = ConvertToPos(ID);
                         RenderTile(tilePos, i, j, worldPos);
                         window.draw(currentTile);
+
+                        ID = chunk.vectorMapObject[i][j];
+                        if (ID != 0) {
+                            tilePos = ConvertToPos(ID);
+                            RenderTile(tilePos, i, j, worldPos);
+                            window.draw(currentTile);
+                        }
                     }
                 }
             }

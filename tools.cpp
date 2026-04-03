@@ -6,7 +6,6 @@ struct Camera {
     public:
         sf::View cam;
         float speed=20.0f;
-        int tileSpacing = 32;
         int chunkSize = 16;
 
     public:
@@ -31,8 +30,8 @@ struct Camera {
         }
 
         void ResizeView(sf::RenderWindow& window, const int gameWidth, const int gameHeight) {
-            float aspectRatio = float(window.getSize().x)/float(window.getSize().y);
-            cam.setSize(gameWidth * aspectRatio, gameHeight);
+            cam.setSize(window.getSize().x, window.getSize().y);
+            window.setView(cam);
         }
 };
 
