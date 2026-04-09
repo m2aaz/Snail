@@ -1,12 +1,16 @@
 # Snail
 
-# Admin Class
-#### Consists of 4 prime functions
-- Init(): Initialises the window & any other features at runtime
-- Run(): Contains the main loop; the main game runs while this is active
-- Exit(): Handles loop termination; window is closed.
-- Save(): TBD.
+The command below will build and run the project:
 
-##### Which consist of 2 sub-functions
-- Update() & Draw(): Both respectively contain drawing & update commands to keep the code structured.
+```bash
+make 
+```
 
+
+# Controls
+
+- Left Click: Place Chunk
+- Right Click: Delete Chunk
+- Mouse Wheel: Zoom
+- WASD: Move Camera
+- F: Toggle FPS Display

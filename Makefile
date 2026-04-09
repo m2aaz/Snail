@@ -12,3 +12,6 @@ build:
 
 run:
 	./$(BUILD_DIR)/$(TARGET)
+
+format:
+	clang-format -i src/*.cpp src/*.h
