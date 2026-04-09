@@ -1,3 +1,0 @@
-/Users/maazmasood/Snail/build/CMakeFiles/sfml-app.dir
-/Users/maazmasood/Snail/build/CMakeFiles/edit_cache.dir
-/Users/maazmasood/Snail/build/CMakeFiles/rebuild_cache.dir
