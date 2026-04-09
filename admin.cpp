@@ -16,6 +16,7 @@ class GameOperator {
         ChunkRenderer Renderer;
         Camera cam;
         ChunkMap cMap;
+        ChunkBehaviour behave;
 
 
     private:
@@ -64,10 +65,10 @@ class GameOperator {
                 {cam.ResizeView(window, gameWidth, gameHeight);}
                 if (event.type == sf::Event::MouseButtonPressed) {
                     if (event.mouseButton.button == sf::Mouse::Left) {
-                        // placeChunk(window, cMap);
+                        behave.placeChunk(window, cMap);
                     }
                     if (event.mouseButton.button == sf::Mouse::Right) {
-                        // deleteChunk(window, cMap);
+                        behave.deleteChunk(window, cMap);
                     }
                 }
                 if (event.type == sf::Event::Closed) 
