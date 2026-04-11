@@ -31,8 +31,7 @@ void Camera::Zoom(sf::RenderWindow &window, float delta) {
 	window.setView(cam);
 }
 
-void Camera::ResizeView(sf::RenderWindow &window, const int gameWidth,
-						const int gameHeight) {
+void Camera::ResizeView(sf::RenderWindow &window, const int gameWidth, const int gameHeight) {
 	cam.setSize(window.getSize().x, window.getSize().y);
 	cam.zoom(zoomLevel); // reapply zoom after resize
 	window.setView(cam);

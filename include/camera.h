@@ -15,6 +15,5 @@ struct Camera {
 	void Init(sf::RenderWindow &window);
 	void Update(sf::RenderWindow &window);
 	void Zoom(sf::RenderWindow &window, float delta);
-	void ResizeView(sf::RenderWindow &window, const int gameWidth,
-					const int gameHeight);
+	void ResizeView(sf::RenderWindow &window, const int gameWidth, const int gameHeight);
 };

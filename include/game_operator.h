@@ -3,6 +3,7 @@
 #include "chunk_behaviour.h"
 #include "chunk_renderer.h"
 #include "clock.h"
+#include "player.cpp"
 
 class GameOperator {
   private:
@@ -17,6 +18,7 @@ class GameOperator {
 	Camera cam;
 	ChunkMap cMap;
 	ChunkBehaviour behave;
+	Player player;
 
   private:
 	void Update();

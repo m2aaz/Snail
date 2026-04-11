@@ -1,13 +1,17 @@
 #include "game_operator.h"
 #include <iostream>
 
-void GameOperator::Update() { cam.Update(window); }
+void GameOperator::Update() { 
+	cam.Update(window);
+	player.Update();
+ }
 
 void GameOperator::Draw() {
 	window.clear(sf::Color(30, 30, 30));
 	Renderer.RenderChunkMap(window, cMap);
 
 	delta.displayFPS(window);
+	player.Draw(window);
 	window.display();
 }
 
@@ -25,6 +29,9 @@ void GameOperator::Init() {
 
 	// Initialise Camera
 	cam.Init(window);
+
+	// Initialise Player
+	player.Init();
 }
 
 void GameOperator::Run() {
