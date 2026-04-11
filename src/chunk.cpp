@@ -40,8 +40,8 @@ bool ChunkMap::Exists(sf::Vector2i coordinates) {
 }
 
 void GenerateChunk(Chunk &chunk) {
-  for (int i = 0; i < chunkSize; i++) {
-    for (int j = 0; j < chunkSize; j++) {
+  for (int i=0; i<chunkSize; i++) {
+    for (int j=0; j<chunkSize; j++) {
       chunk.vectorMapElevation[i][j] = 1;
       chunk.vectorMapGround[i][j] = 0;
       int currentPred = dist(rng);

@@ -14,8 +14,7 @@ public:
   sf::Vector2i ConvertToPos(int itemID);
   void createLookup();
   sf::Vector2f GetChunkWorldPos(const Chunk &chunk);
-  void RenderTile(sf::Vector2i tilePos, int row, int col,
-                  sf::Vector2f worldPos);
+  void RenderTile(sf::Vector2i tilePos, int row, int col, sf::Vector2f worldPos);
   void RenderChunk(sf::RenderWindow &window, const Chunk &chunk);
   void RenderChunkMap(sf::RenderWindow &window, ChunkMap &cMap);
   void DisplayChunk(const Chunk &chunk);

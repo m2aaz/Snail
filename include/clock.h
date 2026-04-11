@@ -18,5 +18,5 @@ public:
   void cycleStart();
   void setFrameRate(sf::RenderWindow &window, int fps);
   void displayFPS(sf::RenderWindow &window);
-  void toggleFPS() { display = !display; }
+  void toggleFPS() {display = !display;}
 };

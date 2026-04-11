@@ -34,8 +34,7 @@ sf::Vector2f ChunkRenderer::GetChunkWorldPos(const Chunk &chunk) {
   return GridToWorld(chunkRow, chunkCol);
 }
 
-void ChunkRenderer::RenderTile(sf::Vector2i tilePos, int row, int col,
-                               sf::Vector2f worldPos) {
+void ChunkRenderer::RenderTile(sf::Vector2i tilePos, int row, int col, sf::Vector2f worldPos) {
   int posX = tilePos.x * tileSpacing;
   int posY = tilePos.y * tileSpacing;
   sf::Vector2f isoCoord = GridToWorld(row, col);
@@ -45,8 +44,8 @@ void ChunkRenderer::RenderTile(sf::Vector2i tilePos, int row, int col,
 
 void ChunkRenderer::RenderChunk(sf::RenderWindow &window, const Chunk &chunk) {
   sf::Vector2f worldPos = GetChunkWorldPos(chunk);
-  for (int i = 0; i < chunkSize; i++) {
-    for (int j = 0; j < chunkSize; j++) {
+  for (int i=0; i<chunkSize; i++) {
+    for (int j=0; j<chunkSize; j++) {
       if (chunk.vectorMapElevation[i][j] > 0) {
         int ID = chunk.vectorMapGround[i][j];
         sf::Vector2i tilePos = ConvertToPos(ID);
@@ -82,8 +81,8 @@ void ChunkRenderer::RenderChunkMap(sf::RenderWindow &window, ChunkMap &cMap) {
 }
 
 void ChunkRenderer::DisplayChunk(const Chunk &chunk) {
-  for (int i = 0; i < chunkSize; i++) {
-    for (int j = 0; j < chunkSize; j++) {
+  for (int i=0; i<chunkSize; i++) {
+    for (int j=0; j<chunkSize; j++) {
       std::cout << chunk.vectorMapGround[i][j] << ", ";
     }
     std::cout << std::endl;
@@ -91,8 +90,8 @@ void ChunkRenderer::DisplayChunk(const Chunk &chunk) {
 
   std::cout << std::endl;
 
-  for (int i = 0; i < chunkSize; i++) {
-    for (int j = 0; j < chunkSize; j++) {
+  for (int i=0; i<chunkSize; i++) {
+    for (int j=0; j<chunkSize; j++) {
       std::cout << chunk.vectorMapObject[i][j] << ", ";
     }
     std::cout << std::endl;
