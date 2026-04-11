@@ -28,7 +28,7 @@ void ChunkMap::Remove(sf::Vector2i coordinates) {
   chunkMap.erase(chunkID);
 }
 
-Chunk &ChunkMap::Get(sf::Vector2i coordinates) {
+Chunk& ChunkMap::Get(sf::Vector2i coordinates) {
   std::string chunkID = setChunkID(coordinates);
   return chunkMap[chunkID];
 }
@@ -36,11 +36,7 @@ Chunk &ChunkMap::Get(sf::Vector2i coordinates) {
 bool ChunkMap::Exists(sf::Vector2i coordinates) {
   std::string chunkID = setChunkID(coordinates);
   auto iterator = chunkMap.find(chunkID);
-  if (iterator == chunkMap.end()) {
-    return false;
-  } else {
-    return true;
-  }
+  if (iterator == chunkMap.end()) {return false;} else {return true;}
 }
 
 void GenerateChunk(Chunk &chunk) {
