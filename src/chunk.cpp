@@ -1,9 +1,10 @@
 #include "chunk.h"
 #include <iostream>
 #include <random>
+#include "FastNoiseLite.h"
 
 std::mt19937 rng(std::random_device{}());
-std::uniform_int_distribution<int> dist(0, 10);
+std::uniform_int_distribution<int> dist(0, 99);
 
 Chunk::Chunk() {
 	vectorMapGround.resize(chunkSize, std::vector<int>(chunkSize, 0));
@@ -44,14 +45,45 @@ bool ChunkMap::Exists(sf::Vector2i coordinates) {
 }
 
 void GenerateChunk(Chunk &chunk) {
+	FastNoiseLite noise;
+	noise.SetSeed(12345678);
+	noise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
+	noise.SetFrequency(0.05f);
+
 	for (int i = 0; i < chunkSize; i++) {
 		for (int j = 0; j < chunkSize; j++) {
-			chunk.vectorMapElevation[i][j] = 1;
-			chunk.vectorMapGround[i][j] = 0;
-			int currentPred = dist(rng);
-			if (currentPred <= 1) {
-				chunk.vectorMapObject[i][j] = 1;
+			int worldX = chunk.chunkCoordinates.x * chunkSize + j;
+			int worldY = chunk.chunkCoordinates.y * chunkSize + i;
+
+			float currentNoise = noise.GetNoise((float)worldX, (float)worldY);
+			float height = (currentNoise + 1.0f) * 0.5f; // Make Noise Position (No Longer [-1, 1])
+
+			chunk.vectorMapElevation[i][j] = (int)(height * 100);
+
+			// Generation Logic - Only water and grass for natural flow
+			if (currentNoise < -0.3f) {
+				// Favor main water tile {6,8}, use variations very sparingly
+				int waterType = dist(rng) % 100; // 0-99 range
+				if (waterType < 1) { // 1% chance
+					chunk.vectorMapGround[i][j] = 3; // variant 1 {7,8}
+				} else if (waterType < 2) { // 1% chance
+					chunk.vectorMapGround[i][j] = 4; // variant 2 {8,8}
+				} else { // 98% chance
+					chunk.vectorMapGround[i][j] = 0; // main water {6,8}
+				}
 			} else {
+				chunk.vectorMapGround[i][j] = 1; // GRASS
+			}
+
+			// Generate vegetation on grass and submerged objects on water
+			if (chunk.vectorMapGround[i][j] == 1) { // Grass tiles
+				int vegetationChance = dist(rng);
+				if (vegetationChance <= 15) { // 15% chance for vegetation
+					chunk.vectorMapObject[i][j] = 2; // bush
+				} else {
+					chunk.vectorMapObject[i][j] = 0;
+				}
+			} else { // Water tiles - no objects
 				chunk.vectorMapObject[i][j] = 0;
 			}
 		}

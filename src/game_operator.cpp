@@ -19,13 +19,19 @@ void GameOperator::Init() {
 	// Initialise Window.
 	window.create(sf::VideoMode(gameWidth, gameHeight), "The Immortal Snail");
 
-	// Initialise Chunk Renderer & Generate Chunk.
+	// Initialise Chunk Renderer & Generate Initial Chunks.
 	Renderer.Init();
-	spawnChunk(sf::Vector2i(0, 0), cMap);
+	
+	// Spawn chunks in a large grid around origin to create a huge world with borders
+	for (int x = -10; x <= 10; x++) {
+		for (int y = -10; y <= 10; y++) {
+			spawnChunk(sf::Vector2i(x, y), cMap);
+		}
+	}
 
 	// Set Window Frames.
 	delta.Init();
-	delta.setFrameRate(window, 60);
+	delta.setFrameRate(window, 120);
 
 	// Initialise Camera
 	cam.Init(window);
@@ -62,8 +68,13 @@ void GameOperator::Exit() {
 				delta.toggleFPS();
 			}
 		}
-		if (event.type == sf::Event::MouseWheelScrolled) {
-			cam.Zoom(window, event.mouseWheelScroll.delta);
+		if (event.type == sf::Event::KeyPressed) {
+			if (event.key.code == sf::Keyboard::C) {
+				cam.Zoom(window, 1);
+			}
+			if (event.key.code == sf::Keyboard::X) {
+				cam.Zoom(window, -1);
+			}
 		}
 		if (event.type == sf::Event::Closed) {
 			window.close();

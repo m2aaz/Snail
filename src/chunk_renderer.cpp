@@ -21,11 +21,12 @@ sf::Vector2i ChunkRenderer::ConvertToPos(int itemID) {
 }
 
 void ChunkRenderer::createLookup() {
-	TileLookup[0] = {7, 3}; // grass
-	TileLookup[1] = {1, 6}; // rock
-	TileLookup[2] = {1, 0};
-	TileLookup[3] = {2, 0};
-	TileLookup[4] = {3, 0};
+	TileLookup[0] = {6, 8}; // main dark water
+	TileLookup[1] = {7, 3}; // grass
+	TileLookup[2] = {10, 3}; // bush
+	// Water variations 
+	TileLookup[3] = {7, 8}; // variant 1
+	TileLookup[4] = {8, 8}; // variant 2
 }
 
 sf::Vector2f ChunkRenderer::GetChunkWorldPos(const Chunk &chunk) {

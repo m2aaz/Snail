@@ -7,7 +7,7 @@ all: build run
 
 build:
 	@mkdir -p $(BUILD_DIR)
-	cd $(BUILD_DIR) && cmake .. 
+	cd $(BUILD_DIR) && cmake .. -DSFML_DIR=/opt/homebrew/opt/sfml@2/lib/cmake/SFML
 	cd $(BUILD_DIR) && make
 
 run:
