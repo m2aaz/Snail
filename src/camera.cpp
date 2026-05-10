@@ -1,4 +1,5 @@
 #include "camera.h"
+#include <cmath>
 
 void Camera::Init(sf::RenderWindow &window) {
 	cam = window.getDefaultView();
@@ -8,14 +9,25 @@ void Camera::Init(sf::RenderWindow &window) {
 }
 
 void Camera::Update(sf::RenderWindow &window) {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-		cam.move(0, -speed);
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-		cam.move(0, speed);
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-		cam.move(-speed, 0);
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-		cam.move(speed, 0);
+	// Camera no longer moves independently; it follows the player.
+	window.setView(cam);
+}
+
+void Camera::FollowPlayer(sf::RenderWindow &window, const sf::Vector2f &playerWorldPos) {
+	sf::Vector2f cameraCenter = cam.getCenter();
+	sf::Vector2f offset = playerWorldPos - cameraCenter;
+
+	if (std::abs(offset.x) > deadzoneWidth) {
+		float moveX = offset.x > 0 ? offset.x - deadzoneWidth : offset.x + deadzoneWidth;
+		cameraCenter.x += moveX;
+	}
+
+	if (std::abs(offset.y) > deadzoneHeight) {
+		float moveY = offset.y > 0 ? offset.y - deadzoneHeight : offset.y + deadzoneHeight;
+		cameraCenter.y += moveY;
+	}
+
+	cam.setCenter(cameraCenter);
 	window.setView(cam);
 }
 

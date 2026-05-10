@@ -2,8 +2,10 @@
 #include <iostream>
 
 void GameOperator::Update() { 
-	cam.Update(window);
 	player.Update();
+	sf::Vector2i playerGrid = player.GetGridPosition();
+	sf::Vector2f playerWorld = GridToWorld((float)playerGrid.y, (float)playerGrid.x);
+	cam.FollowPlayer(window, playerWorld);
  }
 
 void GameOperator::Draw() {
@@ -28,6 +30,20 @@ void GameOperator::Init() {
 			spawnChunk(sf::Vector2i(x, y), cMap);
 		}
 	}
+
+	// Place player on a non-water tile in the origin chunk.
+	if (cMap.Exists({0, 0})) {
+		Chunk& originChunk = cMap.Get({0, 0});
+		for (int i = 0; i < chunkSize; i++) {
+			for (int j = 0; j < chunkSize; j++) {
+				if (originChunk.vectorMapGround[i][j] != 0) {
+					player.SetGridPosition({j, i});
+					goto player_spawned;
+				}
+			}
+		}
+	}
+player_spawned:
 
 	// Set Window Frames.
 	delta.Init();
@@ -64,11 +80,10 @@ void GameOperator::Exit() {
 			}
 		}
 		if (event.type == sf::Event::KeyPressed) {
+			player.HandleInput(event, cMap);
 			if (event.key.code == sf::Keyboard::F) {
 				delta.toggleFPS();
 			}
-		}
-		if (event.type == sf::Event::KeyPressed) {
 			if (event.key.code == sf::Keyboard::C) {
 				cam.Zoom(window, 1);
 			}
