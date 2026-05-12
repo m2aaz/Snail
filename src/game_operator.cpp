@@ -1,9 +1,40 @@
 #include "game_operator.h"
+#include "enemy.h"
 #include <iostream>
 
 void GameOperator::Update() { 
 	player.Update();
 	sf::Vector2i playerGrid = player.GetGridPosition();
+
+	// Spawn enemies on a fixed interval, always near the player but not too far.
+	enemySpawnTimer += delta.deltaTime / 1000.0f;
+	if (enemySpawnTimer >= Enemy::spawnIntervalSeconds) {
+		enemySpawnTimer -= Enemy::spawnIntervalSeconds;
+		Enemy spawned;
+		if (Enemy::TrySpawnNearPlayer(playerGrid, cMap, spawned)) {
+			enemies.push_back(std::move(spawned));
+			std::cout << "Auto-spawned enemy at " << spawned.GetGridPosition().x << "," << spawned.GetGridPosition().y << std::endl;
+		} else {
+			std::cout << "Auto-spawn failed: no valid spawn found" << std::endl;
+		}
+	}
+
+	sf::FloatRect playerBounds = player.GetGlobalBounds();
+	const int playerDamage = 10;
+
+	for (auto it = enemies.begin(); it != enemies.end();) {
+		it->Update(delta.deltaTime, playerGrid);
+		if (playerBounds.intersects(it->GetGlobalBounds())) {
+			it->TakeDamage(playerDamage);
+			std::cout << "Player hit enemy, enemy hp=" << it->GetHP() << std::endl;
+			if (it->IsDead()) {
+				it = enemies.erase(it);
+				continue;
+			}
+		}
+		++it;
+	}
+
 	sf::Vector2f playerWorld = GridToWorld((float)playerGrid.y, (float)playerGrid.x);
 	cam.FollowPlayer(window, playerWorld);
  }
@@ -11,6 +42,10 @@ void GameOperator::Update() {
 void GameOperator::Draw() {
 	window.clear(sf::Color(30, 30, 30));
 	Renderer.RenderChunkMap(window, cMap);
+
+	for (auto &enemy : enemies) {
+		enemy.Draw(window);
+	}
 
 	delta.displayFPS(window);
 	player.Draw(window);
@@ -72,11 +107,34 @@ void GameOperator::Exit() {
 			cam.ResizeView(window, gameWidth, gameHeight);
 		}
 		if (event.type == sf::Event::MouseButtonPressed) {
-			if (event.mouseButton.button == sf::Mouse::Left) {
-				behave.placeChunk(window, cMap);
-			}
-			if (event.mouseButton.button == sf::Mouse::Right) {
-				behave.deleteChunk(window, cMap);
+			bool shiftHeld = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift);
+			if (shiftHeld) {
+				sf::Vector2i clickPixel(event.mouseButton.x, event.mouseButton.y);
+				sf::Vector2f clickWorld = window.mapPixelToCoords(clickPixel);
+				sf::Vector2i clickGrid = WorldToGrid(clickWorld);
+
+				if (event.mouseButton.button == sf::Mouse::Left) {
+					Enemy spawned;
+					if (Enemy::TrySpawnAtGrid(clickGrid, cMap, spawned)) {
+						enemies.push_back(std::move(spawned));
+						std::cout << "Spawned enemy at " << clickGrid.x << "," << clickGrid.y << std::endl;
+					}
+				}
+				if (event.mouseButton.button == sf::Mouse::Right) {
+					sf::Vector2i playerGrid = player.GetGridPosition();
+					Enemy spawned;
+					if (Enemy::TrySpawnNearPlayer(playerGrid, cMap, spawned)) {
+						enemies.push_back(std::move(spawned));
+						std::cout << "Spawned enemy near player at " << spawned.GetGridPosition().x << "," << spawned.GetGridPosition().y << std::endl;
+					}
+				}
+			} else {
+				if (event.mouseButton.button == sf::Mouse::Left) {
+					// behave.placeChunk(window, cMap);
+				}
+				if (event.mouseButton.button == sf::Mouse::Right) {
+					// behave.deleteChunk(window, cMap);
+				}
 			}
 		}
 		if (event.type == sf::Event::KeyPressed) {

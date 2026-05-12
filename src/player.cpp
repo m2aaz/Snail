@@ -88,6 +88,10 @@ sf::Vector2i Player::GetGridPosition() const {
 
 void Player::Update() {}
 
+sf::FloatRect Player::GetGlobalBounds() const {
+    return playerSprite.getGlobalBounds();
+}
+
 void Player::Draw(sf::RenderWindow& window) {
     window.draw(playerSprite);
 }

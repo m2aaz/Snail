@@ -1,8 +1,10 @@
 #pragma once
+#include <vector>
 #include "camera.h"
 #include "chunk_behaviour.h"
 #include "chunk_renderer.h"
 #include "clock.h"
+#include "enemy.h"
 #include "player.h"
 
 class GameOperator {
@@ -19,6 +21,8 @@ class GameOperator {
 	ChunkMap cMap;
 	ChunkBehaviour behave;
 	Player player;
+	std::vector<Enemy> enemies;
+	float enemySpawnTimer = 0.0f;
 
   private:
 	void Update();

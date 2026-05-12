@@ -23,6 +23,7 @@ class Player {
         sf::Vector2i GetGridPosition() const;
         void Update();
         void Draw(sf::RenderWindow& window);
+        sf::FloatRect GetGlobalBounds() const;
 
         // Inventory Methods
         void AddItem(const Item& item);

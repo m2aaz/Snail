@@ -7,7 +7,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(SFML 2.6 REQUIRED COMPONENTS graphics window system)
 
-file(GLOB_RECURSE SOURCES "src/*.cpp")
+file(GLOB_RECURSE SOURCES "src/*.cpp" "include/*.cpp")
 
 add_executable(sfml_app ${SOURCES})
 target_include_directories(sfml_app PRIVATE include)
