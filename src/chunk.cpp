@@ -62,7 +62,6 @@ void GenerateChunk(Chunk &chunk) {
 
 			// Generation Logic - Only water and grass for natural flow
 			if (currentNoise < -0.3f) {
-				// Favor main water tile {6,8}, use variations very sparingly
 				int waterType = dist(rng) % 100; // 0-99 range
 				if (waterType < 1) { // 1% chance
 					chunk.vectorMapGround[i][j] = 3; // variant 1 {7,8}
@@ -75,7 +74,7 @@ void GenerateChunk(Chunk &chunk) {
 				chunk.vectorMapGround[i][j] = 1; // GRASS
 			}
 
-			// Generate vegetation on grass and submerged objects on water
+			// Vegetation / flaura and fona code (temporary)
 			if (chunk.vectorMapGround[i][j] == 1) { // Grass tiles
 				int vegetationChance = dist(rng);
 				if (vegetationChance <= 15) { // 15% chance for vegetation
@@ -83,7 +82,7 @@ void GenerateChunk(Chunk &chunk) {
 				} else {
 					chunk.vectorMapObject[i][j] = 0;
 				}
-			} else { // Water tiles - no objects
+			} else { // NO bush/vegetation on WATER tiles
 				chunk.vectorMapObject[i][j] = 0;
 			}
 		}

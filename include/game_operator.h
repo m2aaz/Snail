@@ -3,7 +3,7 @@
 #include "chunk_behaviour.h"
 #include "chunk_renderer.h"
 #include "clock.h"
-#include "player.cpp"
+#include "player.h"
 
 class GameOperator {
   private:

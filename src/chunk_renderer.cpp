@@ -35,8 +35,7 @@ sf::Vector2f ChunkRenderer::GetChunkWorldPos(const Chunk &chunk) {
 	return GridToWorld(chunkRow, chunkCol);
 }
 
-void ChunkRenderer::RenderTile(sf::Vector2i tilePos, int row, int col,
-							   sf::Vector2f worldPos) {
+void ChunkRenderer::RenderTile(sf::Vector2i tilePos, int row, int col, sf::Vector2f worldPos) {
 	int posX = tilePos.x * tileSpacing;
 	int posY = tilePos.y * tileSpacing;
 	sf::Vector2f isoCoord = GridToWorld(row, col);
