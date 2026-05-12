@@ -67,18 +67,19 @@ void GameOperator::Init() {
 	}
 
 	// Place player on a non-water tile in the origin chunk.
+	bool spawned=false;
 	if (cMap.Exists({0, 0})) {
 		Chunk& originChunk = cMap.Get({0, 0});
 		for (int i = 0; i < chunkSize; i++) {
 			for (int j = 0; j < chunkSize; j++) {
 				if (originChunk.vectorMapGround[i][j] != 0) {
 					player.SetGridPosition({j, i});
-					goto player_spawned;
+					spawned=true;
+					break;
 				}
 			}
 		}
 	}
-player_spawned:
 
 	// Set Window Frames.
 	delta.Init();

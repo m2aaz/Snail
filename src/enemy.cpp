@@ -1,10 +1,8 @@
 #include "enemy.h"
-
 #include <iostream>
 #include <random>
 #include <cmath>
 
-namespace {
 static std::mt19937 &GetEnemyRng() {
     static std::random_device rd;
     static std::mt19937 rng(rd());
@@ -19,7 +17,6 @@ static int RandomInt(int low, int high) {
 static int ChunkIndexFromGrid(int gridCoord) {
     return static_cast<int>(std::floor(static_cast<float>(gridCoord) / chunkSize));
 }
-} // namespace
 
 sf::Texture Enemy::texture;
 bool Enemy::textureLoaded = false;
@@ -70,9 +67,7 @@ void Enemy::TakeDamage(int amount) {
     }
 
     hp -= amount;
-    if (hp < 0) {
-        hp = 0;
-    }
+    if (hp < 0) { hp = 0;}
     hitTimer = hitCooldownSeconds;
 }
 

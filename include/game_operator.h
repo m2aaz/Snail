@@ -22,7 +22,7 @@ class GameOperator {
 	ChunkBehaviour behave;
 	Player player;
 	std::vector<Enemy> enemies;
-	float enemySpawnTimer = 0.0f;
+	float enemySpawnTimer = 1.0f;
 
   private:
 	void Update();
