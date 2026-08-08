@@ -23,6 +23,7 @@ The project focuses on understanding the mathematics and software architecture b
 ## Project Status
 
 **Engine:** Functional
+
 **Development Status:** Paused
 
 The command below will build and run the project:
